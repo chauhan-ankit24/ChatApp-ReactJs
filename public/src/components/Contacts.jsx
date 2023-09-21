@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Logout from "./Logout";
-import {AiOutlineMessage} from 'react-icons/ai'
+import { AiOutlineMessage } from 'react-icons/ai'
+
+
+
 export default function Contacts({ contacts, changeChat }) {
+  
   const [currentUserName, setCurrentUserName] = useState(undefined);
   const [currentUserImage, setCurrentUserImage] = useState(undefined);
   const [currentSelected, setCurrentSelected] = useState(undefined); // index of current contact seleted from left
+
+  // get current user from local storage
   useEffect(() => {
     const fetchData = async () => {
       const data = await JSON.parse(
@@ -28,7 +34,7 @@ export default function Contacts({ contacts, changeChat }) {
         <Container>
           {/* left top heading */}
           <div className="brand2">
-            <AiOutlineMessage/>
+            <AiOutlineMessage />
             <h3>chatOn</h3>
           </div>
           {/* left contacts list */}

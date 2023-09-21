@@ -10,16 +10,18 @@ import './Login.css'
 
 export default function Login() {
   const navigate = useNavigate();
+
   const [values, setValues] = useState({ username: "", password: "" });
 
   const toastOptions = {
-    position:"top-right",
+    position: "top-right",
     autoClose: 8000,
     pauseOnHover: true,
     draggable: true,
     theme: "dark",
   };
 
+  // saved user will go to chat
   useEffect(() => {
     if (localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
       navigate("/");

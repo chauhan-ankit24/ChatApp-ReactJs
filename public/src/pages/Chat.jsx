@@ -11,11 +11,13 @@ import Welcome from "../components/Welcome";
 export default function Chat() {
   const navigate = useNavigate();
   const socket = useRef();
+
   const [contacts, setContacts] = useState([]); // all contacts
-  const [currentChat, setCurrentChat] = useState(undefined);
+  const [currentChat, setCurrentChat] = useState(undefined); // chat which is clicked on left
   const [currentUser, setCurrentUser] = useState(undefined);
 
-  useEffect(() => {   // get current user from local storage
+  // get current user from local storage
+  useEffect(() => {
     const checkLocalStorage = async () => {
       if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
         navigate("/login");
@@ -31,14 +33,16 @@ export default function Chat() {
     checkLocalStorage();
   }, []);
 
+  // inform the server that a user has connected.
   useEffect(() => {
     if (currentUser) {
-      socket.current = io(host);
+      socket.current = io(host); // Establish a Socket.IO connection to 5000
       socket.current.emit("add-user", currentUser._id);
     }
   }, [currentUser]);
 
-  useEffect(() => {  // get all contacts of currentuser
+  // get all user except currentUser
+  useEffect(() => {
     const fetchData = async () => {
       if (currentUser) {
         if (currentUser.isAvatarImageSet) {

@@ -12,6 +12,7 @@ import { setAvatarRoute } from "../utils/APIRoutes";
 export default function SetAvatar() {
   const api = `https://api.multiavatar.com/4645646`;
   const navigate = useNavigate();
+
   const [avatars, setAvatars] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedAvatar, setSelectedAvatar] = useState(undefined);
@@ -68,7 +69,8 @@ export default function SetAvatar() {
             `${api}/${Math.round(Math.random() * 1000)}`
           );
           const buffer = new Buffer(image.data); // to temporarily store data
-          data.push(buffer.toString("base64")); //converts the Buffer object to a base64-encoded string before pushing it into the data array.stored as string in Db
+          data.push(buffer.toString("base64")); //converts the Buffer object to a base64-encoded string before pushing it 
+          // into the data array. stored as string in Db
         }
         setAvatars(data);
         setIsLoading(false);

@@ -4,19 +4,13 @@ import styled from "styled-components";
 import { useNavigate, Link } from "react-router-dom";
 import Logo from "../assets/logo.png";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";      // css for error message
+import "react-toastify/dist/ReactToastify.css";      // css for error message in package
 import { registerRoute } from "../utils/APIRoutes";
 import './Register.css'
 
 export default function Register() {
   const navigate = useNavigate();
-  const toastOptions = {
-    position: "bottom-right",
-    autoClose: 8000,
-    pauseOnHover: true,
-    draggable: true,
-    theme: "dark",
-  };
+
   const [values, setValues] = useState({
     username: "",
     email: "",
@@ -24,6 +18,15 @@ export default function Register() {
     confirmPassword: "",
   });
 
+  const toastOptions = {
+    position: "bottom-right",
+    autoClose: 8000,
+    pauseOnHover: true,
+    draggable: true,
+    theme: "dark",
+  };
+
+  // saved user will go to chat
   useEffect(() => {
     if (localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
       navigate("/");
@@ -33,7 +36,8 @@ export default function Register() {
   const handleChange = (event) => {
     setValues({ ...values, [event.target.name]: event.target.value });
   };
-  // { ...values } is the spread operator used to create a shallow copy of the values object. This is done to ensure that the existing properties in the state object are not mutated directly.
+  // { ...values } is the spread operator used to create a shallow copy of the values object. 
+  // This is done to ensure that the existing properties in the state object are not mutated directly.
 
   const handleValidation = () => {
     const { password, confirmPassword, username, email } = values;
@@ -92,7 +96,7 @@ export default function Register() {
         <FormContainer>
           <form action="" onSubmit={(event) => handleSubmit(event)}>
             <div className="logo">
-              <img src={Logo} alt="logo" className="brand"/>
+              <img src={Logo} alt="logo" className="brand" />
               {/* <h1>chatON</h1> */}
             </div>
             <input
