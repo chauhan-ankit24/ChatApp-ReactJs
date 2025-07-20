@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
@@ -7,12 +8,12 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { setAvatarRoute } from "../utils/APIRoutes";
+import multiavatar from '@multiavatar/multiavatar';
+
 
 
 export default function SetAvatar() {
-  const api = `https://api.multiavatar.com/4645646`;
   const navigate = useNavigate();
-
   const [avatars, setAvatars] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedAvatar, setSelectedAvatar] = useState(undefined);
@@ -31,8 +32,7 @@ export default function SetAvatar() {
         navigate("/login");
       }
     })();
-  }, []);
-
+  }, [navigate]);
 
   const setProfilePicture = async () => {
     if (selectedAvatar === undefined) {
@@ -43,10 +43,10 @@ export default function SetAvatar() {
       );
 
       const { data } = await axios.post(`${setAvatarRoute}/${user._id}`, {
-        image: avatars[selectedAvatar],
+        image: Buffer.from(avatars[selectedAvatar]).toString("base64"),
       });
 
-      if (data.isSet) { // changing in local storage 
+      if (data.isSet) {
         user.isAvatarImageSet = true;
         user.avatarImage = data.image;
         localStorage.setItem(
@@ -65,21 +65,18 @@ export default function SetAvatar() {
       try {
         const data = [];
         for (let i = 0; i < 6; i++) {
-          const image = await axios.get(
-            `${api}/${Math.round(Math.random() * 1000)}`
-          );
-          const buffer = new Buffer(image.data); // to temporarily store data
-          data.push(buffer.toString("base64")); //converts the Buffer object to a base64-encoded string before pushing it 
-          // into the data array. stored as string in Db
+          // Generate a random name or seed for avatar
+          const seed = Math.random().toString(36).substring(2, 10);
+          const svgCode = multiavatar(seed);
+          data.push(svgCode);
         }
         setAvatars(data);
         setIsLoading(false);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error generating avatars:", error);
         setIsLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
@@ -98,14 +95,22 @@ export default function SetAvatar() {
             {avatars.map((avatar, index) => {
               return (
                 <div
-                  className={`avatar ${selectedAvatar === index ? "selected" : ""
-                    }`}
+                  className={`avatar ${selectedAvatar === index ? "selected" : ""}`}
+                  key={index}
+                  onClick={() => setSelectedAvatar(index)}
                 >
-                  <img
-                    src={`data:image/svg+xml;base64,${avatar}`}
-                    alt="avatar"
-                    key={avatar}
-                    onClick={() => setSelectedAvatar(index)}
+                  <div
+                    style={{
+                      borderRadius: '50%',
+                      overflow: 'hidden',
+                      width: '6rem',
+                      height: '6rem',
+                      background: '#fff',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                    dangerouslySetInnerHTML={{ __html: avatar }}
                   />
                 </div>
               );
